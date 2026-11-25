@@ -1,0 +1,10 @@
+.gradle/
+build/
+.intellijPlatform/
+.idea/
+*.iml
+
+# local working notes (not part of the plugin)
+docs/
+.superpowers/
+.sdkmanrc

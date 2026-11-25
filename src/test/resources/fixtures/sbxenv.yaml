@@ -1,0 +1,41 @@
+schemaVersion: "1"
+
+# Example project environment for Docker Sandboxes (sbx env run).
+args:
+  agent:
+    default: claude
+    description: Agent to run; any built-in sbx agent (claude, copilot, codex, …)
+  # The sandbox name is also used by the lifecycle hooks below.
+  sandbox:
+    default: myproject
+    description: Sandbox name; postCreate uses it to reach back into the sandbox
+
+name: ${{ env.args.sandbox }}
+agent: ${{ env.args.agent }}
+workspace:
+  path: .
+  # Run the agent on a private clone of the host repo instead of a bind mount.
+  clone: true
+
+kits:
+  - ./sandbox_config/dev-tools
+
+env:
+  APP_PROFILE: "dev"
+  JAVA_HOME: "/opt/java/jdk"
+
+sandboxOptions:
+  cpus: 2
+  memory: 8g
+
+ports:
+  - sandbox: 8080
+    host: 8080
+
+lifecycle:
+  # Lifecycle commands run on the host, so each step shells back in via `sbx exec`.
+  postCreate:
+    - command: >-
+        sbx exec ${{ env.args.sandbox }} bash -lc
+        'cd ${{ env.projectDir }} && ./gradlew --version'
+      timeout: 10m

@@ -1,0 +1,22 @@
+<idea-plugin>
+    <id>dev.aigw.sandbox</id>
+    <name>AIGW Sandbox</name>
+    <vendor>AIGW</vendor>
+    <description>Run AI coding agents in isolated sandboxes (sbx) from inside the IDE.</description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>Git4Idea</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="dev.aigw.sandbox.settings.AigwAppSettings"/>
+        <projectService serviceImplementation="dev.aigw.sandbox.settings.AigwProjectSettings"/>
+        <projectConfigurable parentId="tools" instance="dev.aigw.sandbox.settings.AigwConfigurable"
+                             id="dev.aigw.sandbox.settings" displayName="AIGW Sandbox"/>
+        <toolWindow id="AIGW Sandboxes" anchor="right" icon="AllIcons.Nodes.Deploy"
+                    factoryClass="dev.aigw.sandbox.ui.SandboxToolWindowFactory"/>
+        <statusBarWidgetFactory id="AigwStatus" order="first"
+                                implementation="dev.aigw.sandbox.ui.AigwStatusWidgetFactory"/>
+        <notificationGroup id="AIGW Sandbox" displayType="BALLOON"/>
+    </extensions>
+</idea-plugin>

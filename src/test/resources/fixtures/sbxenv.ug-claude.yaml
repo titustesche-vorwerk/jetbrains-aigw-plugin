@@ -1,0 +1,27 @@
+schemaVersion: "1"
+
+# Example overlay: run Claude Code through the Databricks AI Gateway (`ug claude`).
+# Merge it on top of the project sbxenv.yaml:
+#
+#   sbx env run sbxenv.yaml sandbox_config/sbxenv.ug-claude.yaml \
+#     --env-arg sandbox=<name> --env-arg ugWorkspace=https://<workspace host>
+#
+args:
+  # Read by `ug claude --workspace` on first launch.
+  ugWorkspace:
+    required: true
+    pattern: '^https://[A-Za-z0-9.-]+(/.*)?$'
+    description: Databricks workspace URL `ug claude` launches against
+
+agent: claude
+entrypoint: [ug, claude, --workspace, "${{ env.args.ugWorkspace }}"]
+kits:
+  - ./ug-claude
+
+env:
+  UG_WORKSPACE: ${{ env.args.ugWorkspace }}
+
+ports:
+  # The Databricks OAuth callback; the IDE plugin unpublishes it and relays the callback itself.
+  - sandbox: 8020
+    host: 8020
